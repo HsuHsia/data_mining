@@ -1,0 +1,25 @@
+from sklearn.cluster import SpectralClustering
+from sklearn import datasets
+from sklearn.metrics import silhouette_score
+import matplotlib.pyplot as plt
+from sklearn.manifold import TSNE
+import pandas as pd
+
+
+iris = datasets.load_iris()
+iris_X = iris["data"]
+iris_y = iris["target"]
+
+y_pred = SpectralClustering(n_clusters=3, ).fit_predict(iris_X)
+score = silhouette_score(iris_X, y_pred)
+
+tsne = TSNE(n_components=2, init='random', random_state=177).fit(iris_X)
+df = pd.DataFrame(tsne.embedding_)
+df['labels'] = y_pred
+df1 = df[df['labels'] == 0]
+df2 = df[df['labels'] == 1]
+df3 = df[df['labels'] == 2]
+
+print(score)
+plt.plot(df1[0], df1[1], 'bo', df2[0], df2[1], 'r*', df3[0], df3[1], 'gD')
+plt.show()
